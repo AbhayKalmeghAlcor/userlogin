@@ -1,0 +1,90 @@
+* {
+  margin: 0%;
+  padding: 0%;
+  font-family: 'Roboto', sans-serif;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Roboto:ital,wght@0,100;0,300;0,400;1,300&display=swap');
+
+nav {
+  background-color: rgb(12, 12, 13);
+  color: white;
+  padding: 15px;
+  text-align: center;
+}
+
+.container {
+  background-color: rgb(74, 143, 222);
+  width: 24%;
+  margin: auto;
+  height: 36vh;
+  border-radius: 10px;
+  position: absolute;
+  right: 10vh;
+  top: 30%;
+  box-sizing: border-box;
+  padding: 7vmax 2vmax 1vmax 2vmax;
+}
+
+.container > form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+input {
+  padding: 10px;
+  margin: 2vmax 0vmax 0vmax;
+}
+
+button {
+  border: none;
+  background-color: orange;
+  color: black;
+  cursor: pointer;
+  border-radius: 20px;
+  margin: 2vmax 6vmax;
+  height: 3vmax;
+}
+
+button:hover {
+  background-color: greenyellow;
+}
+
+.signIn, .signUp {
+  font-size: 20px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  margin-top: -6vmax;
+}
+
+.links {
+  text-align: right;
+}
+
+.links> a {
+  padding: 10px;
+  margin: 10px 1px;
+  color: white;
+}
+
+.signupcontainer {
+  background-color: rgb(74, 143, 222);
+  width: 24%;
+  margin: auto;
+  height: 50vh;
+  border-radius: 10px;
+  position: absolute;
+  right: 10vh;
+  top: 30%;
+  box-sizing: border-box;
+  padding: 7vmax 2vmax 1vmax 2vmax;
+}
+
+.signupcontainer > form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+

@@ -43,14 +43,14 @@ def UserViewSet(request):
             return Response(serializer.data)
         return Response(serializer.errors)
 
-    elif request.method == 'DELETE':
+    else:
         data = request.data
         objs = User.objects.get(id=data['id'])
-        serializer = UserSerializer(objs, data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors)
+        objs.delete()
+        return Response({'message': 'User deleted successfully'})
+
+
+
 
 
 

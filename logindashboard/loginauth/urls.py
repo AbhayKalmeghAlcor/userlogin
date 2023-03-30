@@ -6,5 +6,5 @@ from rest_framework import routers
 # router.register(r'users', UserViewSet)
 
 urlpatterns = [
-    path('', views.UserViewSet)
+    path('', views.UserViewSet, name='UserViewSet')
 ]

@@ -3,11 +3,19 @@ from .models import Post
 
 
 class PostSerializer(serializers.ModelSerializer):
-    # user_id = serializers.ReadOnlyField()
+    # recipients = serializers.ListField(
+    #     child=serializers.CharField(allow_blank=False, trim_whitespace=False))
+    # hashtags = serializers.ListField(
+    #     child=serializers.CharField(allow_blank=False, trim_whitespace=False))
+
+    class StringListField(serializers.ListField):
+        recipients = serializers.CharField()
+        hashtags = serializers.CharField()
+
 
     class Meta:
-        model = Post
         fields = '__all__'
+        model = Post
 
     def create(self, validated_data):
         user = Post.objects.create(**validated_data)

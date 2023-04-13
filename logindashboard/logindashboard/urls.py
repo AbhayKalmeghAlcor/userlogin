@@ -1,5 +1,5 @@
-from django.contrib import admin
 from django.urls import path, include
+from django.contrib import admin
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -13,3 +13,8 @@ urlpatterns = [
     path('', include('accounts.urls')),
     path('', include('home.urls'))
 ]
+
+
+admin.site.site_title = "High5 Admin"
+admin.site.site_header = "High5 Cloud Admin"
+admin.site.index_title = "High5 Cloud Admin Panal"

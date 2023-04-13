@@ -37,7 +37,7 @@ class MyAccountManager(BaseUserManager):
 
 
 class Account(AbstractUser):
-    first_name = models.CharField(max_length=100, null=False, default=None)
+    first_name = models.CharField(max_length=100, null=True, default=None)
     last_name = models.CharField(max_length=100, null=True)
     username = models.CharField(max_length=100, unique=True)
     email = models.EmailField(max_length=100, unique=True)
@@ -54,7 +54,7 @@ class Account(AbstractUser):
     is_authenticated = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
+    REQUIRED_FIELDS = ['username']
 
     objects = MyAccountManager()
 

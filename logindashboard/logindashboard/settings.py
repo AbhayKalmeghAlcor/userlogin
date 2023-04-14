@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'loginauth',
     'accounts',
     'home',
+    'notifications',
 ]
 
 

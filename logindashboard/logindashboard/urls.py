@@ -11,9 +11,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/login/', include('loginauth.urls')),
     path('', include('accounts.urls')),
-    path('', include('home.urls'))
+    path('', include('home.urls')),
+    path('noti/', include('notifications.urls'))
 ]
-
 
 admin.site.site_title = "High5 Admin"
 admin.site.site_header = "High5 Cloud Admin"

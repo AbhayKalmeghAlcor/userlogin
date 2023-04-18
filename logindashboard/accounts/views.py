@@ -9,37 +9,46 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.hashers import make_password
 from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
+import json
 
 
-@api_view(['GET', 'POST'])
-def login(request):
-    if request.method == 'GET':
-        objs = Account.objects.all()
-        serializer = AccountSerializer(objs, many=True)
-        return Response(serializer.data)
-
-    elif request.method == 'POST':
-        data = request.data
-        serializer = AccountSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors)
+# @api_view(['GET', 'POST'])
+# def login(request):
+#     if request.method == 'GET':
+#         objs = Account.objects.all()
+#         serializer = AccountSerializer(objs, many=True)
+#         return Response(serializer.data)
+#
+#     elif request.method == 'POST':
+#         data = request.data
+#         serializer = AccountSerializer(data=data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors)
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+
+
     def validate(self, attrs):
         data = super().validate(attrs)
-
         serializer = UserSerializerWithToken(self.user).data
         for k, v in serializer.items():
             data[k] = v
-
         return data
+
+
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        response.set_cookie(key='access_token', value=response.data['access'], httponly=True)
+        return response
 
 
 @api_view(['POST'])
@@ -54,6 +63,7 @@ def registerUser(request):
         )
 
         serializer = UserSerializerWithToken(user, many=False)
+
         return Response(serializer.data)
     except:
         message = {'detail': 'User with this email already exists'}
@@ -75,7 +85,6 @@ def updateUserProfile(request):
         user.password = make_password(data['password'])
 
     user.save()
-
     return Response(serializer.data)
 
 
@@ -117,7 +126,7 @@ def updateUser(request, pk):
     return Response(serializer.data)
 
 
-@api_view(['DELETE']) 
+@api_view(['DELETE'])
 @permission_classes([IsAdminUser])
 def deleteUser(request, pk):
     userForDeletion = Account.objects.get(id=pk)

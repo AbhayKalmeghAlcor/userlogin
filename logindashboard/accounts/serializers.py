@@ -1,7 +1,7 @@
 from .models import Account
-from rest_framework import serializers
-from .models import Account
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework import serializers
+from rest_framework.response import Response
 
 
 class AccountSerializer(serializers.ModelSerializer):
@@ -9,7 +9,11 @@ class AccountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
-        fields = '__all__'
+        fields = ['id', '_id', 'username', 'email', 'name', 'isAdmin', 'token']
+
+    def get_token(self, obj):
+        token = RefreshToken.for_user(obj)
+        return str(token.access_token)
 
     def create(self, validated_data):
         user = Account.objects.create(**validated_data)
@@ -51,3 +55,10 @@ class UserSerializerWithToken(UserSerializer):
     def get_token(self, obj):
         token = RefreshToken.for_user(obj)
         return str(token.access_token)
+
+
+
+
+
+
+

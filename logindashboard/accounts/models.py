@@ -44,7 +44,7 @@ class Account(AbstractUser):
     phone_number = models.CharField(max_length=15, null=True)
 
     # Required
-    date_joined = models.DateTimeField(auto_now=True)  #requried to update
+    date_created = models.DateTimeField(auto_now=True)  # requried to update
     last_login = models.DateTimeField(auto_now_add=True)
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
@@ -69,3 +69,20 @@ class Account(AbstractUser):
 
     def has_module_perms(self, app_label):
         return True
+
+
+class Company(models.Model):
+    name = models.CharField(max_length=255)
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(Account, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    manager_email = models.EmailField(null=False)
+    hire_date = models.DateTimeField()
+    birth_date = models.DateTimeField()
+    country = models.CharField(max_length=100)
+    department = models.CharField(max_length=200)
+    location = models.CharField(max_length=200)
+    role = models.CharField(max_length=200)
+    avtar = models.ImageField(upload_to='photos/users', null=True)

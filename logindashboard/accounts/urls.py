@@ -1,10 +1,8 @@
 from django.urls import path, include
-from .import views
-
-
+from . import views
 
 urlpatterns = [
-
+    path('account/user/', views.Accountuser.as_view(), name='account-user'),
     path('login/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('register/', views.registerUser, name='register'),
     path('profile/', views.getUserProfile, name="users-profile"),
@@ -15,6 +13,3 @@ urlpatterns = [
     path('delete/<str:pk>/', views.deleteUser, name='user-delete'),
 
 ]
-
-
-

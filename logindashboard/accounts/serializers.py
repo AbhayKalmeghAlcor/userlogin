@@ -1,25 +1,7 @@
-from .models import Account
+from .models import Account, UserProfile
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import serializers
 from rest_framework.response import Response
-
-
-class AccountSerializer(serializers.ModelSerializer):
-    # user_id = serializers.ReadOnlyField()
-
-    class Meta:
-        model = Account
-        fields = ['id', '_id', 'username', 'email', 'name', 'isAdmin', 'token']
-
-    def get_token(self, obj):
-        token = RefreshToken.for_user(obj)
-        return str(token.access_token)
-
-    def create(self, validated_data):
-        user = Account.objects.create(**validated_data)
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -29,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
-        fields = ['id', '_id', 'username', 'email', 'name', 'isAdmin']
+        fields = '__all__'
 
     def get__id(self, obj):
         return obj.id
@@ -41,7 +23,6 @@ class UserSerializer(serializers.ModelSerializer):
         name = obj.first_name
         if name == '':
             name = obj.email
-
         return name
 
 
@@ -50,15 +31,32 @@ class UserSerializerWithToken(UserSerializer):
 
     class Meta:
         model = Account
-        fields = ['id', '_id', 'username', 'email', 'name', 'isAdmin', 'token']
+        fields = '__all__'
 
     def get_token(self, obj):
         token = RefreshToken.for_user(obj)
         return str(token.access_token)
 
 
+class AccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = ['id', 'first_name', 'last_name', 'email', 'phone_number', 'is_admin' ]
 
 
+class UserprofileSerializer(serializers.ModelSerializer):
+    user = AccountSerializer()
 
+    class Meta:
+        model = UserProfile
+        fields = ('id', 'manager_email','hire_date','birth_date','country','department','location','role','avtar', 'allowance_boost','user_mode','user')
 
+    def get_account_data(self, obj):
+        userprofile_serializer = AccountSerializer(obj.user)
+        return userprofile_serializer.data
 
+    # def create(self, validated_data):
+    #     user = UserProfile.objects.create(**validated_data)
+    #     user.set_password(validated_data['password'])
+    #     user.save()
+    #     return user

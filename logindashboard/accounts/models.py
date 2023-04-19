@@ -44,7 +44,7 @@ class Account(AbstractUser):
     phone_number = models.CharField(max_length=15, null=True)
 
     # Required
-    date_created = models.DateTimeField(auto_now=True)  # requried to update
+    created_date = models.DateTimeField(auto_now=True)
     last_login = models.DateTimeField(auto_now_add=True)
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
@@ -54,12 +54,13 @@ class Account(AbstractUser):
     is_authenticated = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
     objects = MyAccountManager()
 
     def full_name(self):
-        return f'{self.first_name} {self.last_name}'
+        return "%s %s" % (self.first_name, self.last_name)
+        #return f'{self.first_name} {self.last_name}'
 
     def __str__(self):
         return self.email
@@ -72,17 +73,36 @@ class Account(AbstractUser):
 
 
 class Company(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, null=False)
+    company_type = models.CharField(max_length=255, null=True)
+    description = models.TextField(default="")
+    created_date = models.DateTimeField(auto_now=True)
+    created_user = models.ManyToManyField(Account)
+
+    class Meta:
+        verbose_name = 'company'
+        verbose_name_plural = 'companies'
+
+    def __str__(self):
+        return self.name
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(Account, on_delete=models.CASCADE)
+    user = models.OneToOneField(Account, on_delete=models.CASCADE, default=1)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
-    manager_email = models.EmailField(null=False)
-    hire_date = models.DateTimeField()
-    birth_date = models.DateTimeField()
-    country = models.CharField(max_length=100)
+    manager_email = models.EmailField(null=False, default='')
+    hire_date = models.DateField()
+    birth_date = models.DateField()
+    country = models.CharField(max_length=100, null=True)
     department = models.CharField(max_length=200)
-    location = models.CharField(max_length=200)
-    role = models.CharField(max_length=200)
-    avtar = models.ImageField(upload_to='photos/users', null=True)
+    location = models.CharField(max_length=200, null=True)
+    role = models.CharField(max_length=200, null=True)
+    avtar = models.ImageField(upload_to='photos/users', blank=True)
+    allowance_boost = models.IntegerField(default=200)
+    user_mode = models.CharField(max_length=20, default='normal')
+    created_by = models.CharField(max_length=100, default='admin')
+    # update_date = models.DateTimeField(auto_now=True)
+    updated_by = models.CharField(max_length=100, default='admin')
+
+    def __str__(self):
+        return "%s %s" %(self.user.first_name, self.user.last_name)

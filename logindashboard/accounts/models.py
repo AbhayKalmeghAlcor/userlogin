@@ -28,7 +28,7 @@ class MyAccountManager(BaseUserManager):
             first_name=first_name,
             last_name=last_name
         )
-        user.is_admin = True
+        user.is_admin = True   
         user.is_active = True
         user.is_staff = True
         user.is_superuser = True
@@ -60,7 +60,7 @@ class Account(AbstractUser):
 
     def full_name(self):
         return "%s %s" % (self.first_name, self.last_name)
-        #return f'{self.first_name} {self.last_name}'
+        # return f'{self.first_name} {self.last_name}'
 
     def __str__(self):
         return self.email
@@ -73,11 +73,11 @@ class Account(AbstractUser):
 
 
 class Company(models.Model):
-    name = models.CharField(max_length=255, null=False)
+    name = models.CharField(max_length=255, null=True, default='Alcor')
     company_type = models.CharField(max_length=255, null=True)
-    description = models.TextField(default="")
+    description = models.TextField(default='', null=True)
     created_date = models.DateTimeField(auto_now=True)
-    created_user = models.ManyToManyField(Account)
+    created_user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True)
 
     class Meta:
         verbose_name = 'company'
@@ -105,4 +105,4 @@ class UserProfile(models.Model):
     updated_by = models.CharField(max_length=100, default='admin')
 
     def __str__(self):
-        return "%s %s" %(self.user.first_name, self.user.last_name)
+        return "%s %s" % (self.user.first_name, self.user.last_name)

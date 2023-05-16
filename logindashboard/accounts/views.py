@@ -74,10 +74,12 @@ def registerUser(request):
     data = request.data
     try:
         user = Account.objects.create(
-            first_name=data['name'],
-            username=data['email'],
+            first_name=data['firstName'],
+            last_name=data['lastName'],
+            username=data['username'],
             email=data['email'],
-            password=make_password(data['password'])
+            password=data['password'],
+            
         )
 
         serializer = UserSerializerWithToken(user, many=False)
@@ -95,8 +97,8 @@ def updateUserProfile(request):
     serializer = UserSerializerWithToken(user, many=False)
 
     data = request.data
-    user.first_name = data['name']
-    user.username = data['email']
+    user.first_name = data['firstName']
+    user.last_name = data['lastName']
     user.email = data['email']
 
     if data['password'] != '':
@@ -133,14 +135,20 @@ def getUserById(request, pk):
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def updateUser(request, pk):
-    user = Account.objects.get(id=pk)
+    user = UserProfile.objects.get(id=pk)
     data = request.data
-    user.first_name = data['name']
-    user.username = data['email']
-    user.email = data['email']
-    user.is_staff = data['isAdmin']
+    # user.user.first_name = data['firstName']
+    # user.last_name = data['lastName']
+    # user.email = data['email']
+    user.country = data['country']
+    user.department = data['department']
+    user.location = data['location']
+    user.role = data['role']
+    # user.avtar = data['avtar']
+    user.allowance_boost = data['allowanceBoost']
+    user.user_mode = data['userMode']
     user.save()
-    serializer = UserSerializer(user, many=False)
+    serializer = UserprofileSerializer(user, many=False)
     return Response(serializer.data)
 
 
@@ -187,12 +195,13 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
             current_site = get_current_site(
                 request=request).domain
             relativeLink = reverse(
-                'password-reset-confirm', kwargs={'uidb64': uidb64, 'token': token})
+                'password-reset-confirm', kwargs={'uidb64': uidb64, 'token': token,})
 
             redirect_url = request.data.get('redirect_url', '')
-            absurl = 'http://' + current_site + relativeLink
+            # absurl = 'http://' + current_site + relativeLink
+            absurl = 'http://' + 'localhost:3000/reset/password' + relativeLink
             email_body = 'Hello, \n Use link below to reset your password  \n' + \
-                         absurl + "?redirect_url=" + redirect_url
+                         absurl
             data = {'email_body': email_body, 'to_email': user.email,
                     'email_subject': 'Reset your passsword'}
             Util.send_email(data)

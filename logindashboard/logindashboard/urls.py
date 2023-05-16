@@ -4,6 +4,7 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from django.views.generic import TemplateView
 
 urlpatterns = [
 
@@ -13,6 +14,7 @@ urlpatterns = [
     path('api/login/', include('loginauth.urls')),
     path('', include('accounts.urls')),
     path('', include('home.urls')),
+    path('', TemplateView.as_view(template_name='index.html')),
     path('api/v1/', include('notifications.urls'))
 ]
 

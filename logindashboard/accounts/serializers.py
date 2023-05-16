@@ -106,6 +106,8 @@ class SetNewPasswordSerializer(serializers.Serializer):
         min_length=1, write_only=True)
     uidb64 = serializers.CharField(
         min_length=1, write_only=True)
+        
+    
 
     class Meta:
         fields = ['password', 'token', 'uidb64']
